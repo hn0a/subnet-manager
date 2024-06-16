@@ -216,6 +216,26 @@ ImagePullBackOff
 
 **Solution:** This was resolved by using JavaScript to dynamically fetch and update the subnet list. We implemented AJAX calls to refresh the subnet data without reloading the entire page.
 
+## Screenshots
+
+### Add Subnet
+![Add Subnet](img/add.png)
+
+### Subnet Added
+![Subnet Added](img/added.png)
+
+### View Subnets
+![View Subnets](img/view.png)
+
+### View Subnets Detailed
+![View Subnets Detailed](img/view2.png)
+
+### Update Subnet
+![Update Subnet](img/update.png)
+
+### Update Subnet Details
+![Update Subnet Details](img/update2.png)
+
 ## Conclusion
 
 This project demonstrates a complete workflow from development to deployment of a web-based subnet management application. It covers containerization with Docker, orchestration with Kubernetes, and deployment on a local Minikube cluster. This project serves as a practical example for managing and deploying modern web applications.
