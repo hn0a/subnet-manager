@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subnet Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 20px; }
+        .table-wrapper { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Subnet Manager</h1>
+        <div class="table-wrapper">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>CIDR</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="subnetTableBody">
+                    <!-- Table content will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <label for="subnetId">ID:</label>
+            <input type="number" id="subnetId" class="form-control" placeholder="Enter ID">
+        </div>
+        <div class="form-group">
+            <label for="subnetName">Name:</label>
+            <input type="text" id="subnetName" class="form-control" placeholder="Enter Name">
+        </div>
+        <div class="form-group">
+            <label for="subnetCidr">CIDR:</label>
+            <input type="text" id="subnetCidr" class="form-control" placeholder="Enter CIDR">
+        </div>
+        <button class="btn btn-primary" onclick="addSubnet()">Add Subnet</button>
+    </div>
+    <script>
+        async function fetchSubnets() {
+            const response = await fetch('/subnets');
+            const subnets = await response.json();
+            const tableBody = document.getElementById('subnetTableBody');
+            tableBody.innerHTML = '';
+            subnets.forEach(subnet => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${subnet.id}</td>
+                    <td>${subnet.name}</td>
+                    <td>${subnet.cidr}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editSubnet(${subnet.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteSubnet(${subnet.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        async function addSubnet() {
+            const id = document.getElementById('subnetId').value;
+            const name = document.getElementById('subnetName').value;
+            const cidr = document.getElementById('subnetCidr').value;
+            const response = await fetch('/subnets', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, name, cidr })
+            });
+            if (response.ok) fetchSubnets();
+        }
+
+        async function editSubnet(id) {
+            const name = prompt('Enter new name:');
+            const cidr = prompt('Enter new CIDR:');
+            if (name && cidr) {
+                const response = await fetch(`/subnets/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, cidr })
+                });
+                if (response.ok) fetchSubnets();
+            }
+        }
+
+        async function deleteSubnet(id) {
+            const response = await fetch(`/subnets/${id}`, { method: 'DELETE' });
+            if (response.ok) fetchSubnets();
+        }
+
+        fetchSubnets();
+    </script>
+</body>
+</html>

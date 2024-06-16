@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subnet-manager
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: subnet-manager
+  template:
+    metadata:
+      labels:
+        app: subnet-manager
+    spec:
+      containers:
+      - name: subnet-manager
+        image: localhost:5000/subnet-manager:latest
+        ports:
+        - containerPort: 5000
+
